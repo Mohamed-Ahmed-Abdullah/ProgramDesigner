@@ -1,0 +1,3 @@
+snap
+esc to cancel drag 
+clone speial shapres when you drag it 

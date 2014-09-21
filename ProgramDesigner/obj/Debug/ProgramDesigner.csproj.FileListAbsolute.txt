@@ -1,0 +1,14 @@
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\bin\Debug\ProgramDesigner.exe
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\bin\Debug\ProgramDesigner.pdb
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.csprojResolveAssemblyReference.cache
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\MainWindow.baml
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\MainWindow.g.cs
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\App.g.cs
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner_MarkupCompile.cache
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.g.resources
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.Properties.Resources.resources
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.csproj.GenerateResource.Cache
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.exe
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.pdb
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\GeneratedInternalTypeHelper.g.cs
+c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner_MarkupCompile.lref

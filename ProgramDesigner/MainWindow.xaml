@@ -1,0 +1,39 @@
+﻿<Window x:Class="ProgramDesigner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:ProgramDesigner.Controls"
+        Title="MainWindow" Height="397.368" Width="592.105">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="80*"/>
+        </Grid.ColumnDefinitions>
+        <!--<ListBox Grid.Column="0"  >
+            <ListBoxItem>
+                <Rectangle Width="100" Height="60" Fill="Red"
+                           MouseDown="RecOnMouseDown"
+                           MouseMove="RecOnMouseMove"
+                           MouseUp="RecOnMouseUp"></Rectangle>
+            </ListBoxItem>
+            <ListBoxItem>
+                <Rectangle Width="100" Height="60" Fill="Green"
+                           MouseDown="RecOnMouseDown"
+                           MouseMove="RecOnMouseMove"
+                           MouseUp="RecOnMouseUp"></Rectangle>
+            </ListBoxItem>
+        </ListBox>-->
+
+        <Border Grid.Column="1" BorderThickness="2" BorderBrush="Purple">
+            <Canvas Name="MainCanvas" MouseDown="CanvasOnMouseDown" MouseMove="CanvasOnMouseMove" MouseUp="CanvasOnMouseUp" 
+                    Background="White">
+                <controls:DragGrip IsDragable="True">
+                    <Rectangle Width="100" Height="60" Fill="Red"></Rectangle>
+                </controls:DragGrip>
+                <controls:DragGrip x:Name="GreenDragGrip" IsDragable="True">                    
+                    <Rectangle Width="200" Height="120" Fill="Green">                      
+                    </Rectangle>
+                </controls:DragGrip>
+            </Canvas>
+        </Border>
+    </Grid>
+</Window>
