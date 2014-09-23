@@ -12,3 +12,17 @@ c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDe
 c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.pdb
 c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\GeneratedInternalTypeHelper.g.cs
 c:\users\mohamed\documents\visual studio 2013\Projects\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner_MarkupCompile.lref
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.exe
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.pdb
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\bin\Debug\ProgramDesigner.exe
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\bin\Debug\ProgramDesigner.pdb
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.csprojResolveAssemblyReference.cache
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\MainWindow.g.cs
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\App.g.cs
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner_MarkupCompile.cache
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner_MarkupCompile.lref
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\MainWindow.baml
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.g.resources
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.Properties.Resources.resources
+C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.csproj.GenerateResource.Cache

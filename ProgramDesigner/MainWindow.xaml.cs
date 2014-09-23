@@ -28,48 +28,12 @@ namespace ProgramDesigner
             Utils = new Utils();
         }
 
-        private void RecOnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            ((Rectangle) sender).Tag = true;
-        }
-            
         private int _offset = 5;//pixel
         private Point? _point = null;
         private Point? _startingPoint = null;
-        private void RecOnMouseMove(object sender, MouseEventArgs e)
-        {
-            if (((bool?) ((Rectangle) sender).Tag) == true && e.LeftButton == MouseButtonState.Pressed)
-            {
-                if(_startingPoint == null)
-                    _startingPoint = e.GetPosition(this);
-                _point = e.GetPosition(this);
-
-                if (Math.Abs(_startingPoint.Value.X - _point.Value.X) >= _offset
-                    && Math.Abs(_startingPoint.Value.Y - _point.Value.Y) >= _offset)
-                {
-                    //copy to clipboard and stop the drag
-                    LocalClipboard = Utils.Clone( (Rectangle) sender);
-                    ((Rectangle)sender).Tag = false;
-                    MainCanvas.Children.Add((FrameworkElement) LocalClipboard);
-                    Debug.WriteLine("Copied");
-                }
-            }
-            else
-            {
-                _startingPoint = null;
-                _point = null;
-            }
-        }
-
-        private void RecOnMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            ((Rectangle)sender).Tag = false;            
-
-        }
-
-
         private FrameworkElement _element;
         private bool isDragging;
+        private bool isCanvasDragging;
         private Point clickPosition;
         private Point initialPoint;
         private void CanvasOnMouseDown(object sender, MouseButtonEventArgs e)
@@ -88,15 +52,26 @@ namespace ProgramDesigner
 
                 draggableControl.CaptureMouse();
             }
+
+            var canvas = e.OriginalSource as Canvas;
+            if (canvas != null)
+            {
+                clickPosition = e.GetPosition(this);
+                isCanvasDragging = true;
+                canvas.CaptureMouse();
+            }
         }
 
         private Point _snapOffset = new Point {X = 5, Y = 15}; 
         private void CanvasOnMouseMove(object sender, MouseEventArgs e)
         {
-            var draggableControl = Utils.GetParent<DragGrip>(e.OriginalSource as FrameworkElement) as DragGrip;
-            if (isDragging && draggableControl != null && draggableControl.IsDragable)
+            if (isDragging && e.OriginalSource is DragGrip)
             {
-                Point currentPosition = e.GetPosition(this.Parent as FrameworkElement);
+                var draggableControl = Utils.GetParent<DragGrip>(e.OriginalSource as FrameworkElement) as DragGrip;
+                if (draggableControl == null || !draggableControl.IsDragable)
+                { return; }
+
+                var currentPosition = e.GetPosition(Parent as FrameworkElement);
                 var transform = draggableControl.RenderTransform as TranslateTransform;
                 if (transform == null)
                 {
@@ -104,26 +79,34 @@ namespace ProgramDesigner
                     draggableControl.RenderTransform = transform;
                 }
 
+                //TODO:if the dragable element selected -> drag and selected elment with it  if not-> drag him normally (just use the current code)
+                //Drag
                 transform.X = (currentPosition.X - clickPosition.X) + initialPoint.X.ZeroBased();
                 transform.Y = (currentPosition.Y - clickPosition.Y) + initialPoint.Y.ZeroBased();
 
-                //TODO: Snap to the other element                
+                #region Snapping
+
                 var x = transform.X;
                 var y = transform.Y;
+
                 var xbottom = transform.X + draggableControl.ActualWidth.ZeroBased();
                 var ybottom = transform.Y + draggableControl.ActualHeight.ZeroBased();
+
                 foreach (FrameworkElement child in MainCanvas.Children)
                 {
                     //skip the dragable element
-                    if (child.Equals(draggableControl)) { continue; }
+                    if (child.Equals(draggableControl))
+                    {
+                        continue;
+                    }
 
                     if (!(child.RenderTransform is TranslateTransform))
                     {
                         continue;
                     }
 
-                    var childX = ((TranslateTransform)child.RenderTransform).X;
-                    var childY = ((TranslateTransform)child.RenderTransform).Y;
+                    var childX = ((TranslateTransform) child.RenderTransform).X;
+                    var childY = ((TranslateTransform) child.RenderTransform).Y;
                     var childXBottom = childX + child.ActualWidth.ZeroBased();
                     var childYBottom = childY + child.ActualHeight.ZeroBased();
 
@@ -161,6 +144,28 @@ namespace ProgramDesigner
                         transform.Y = childY;
                     }
                 }
+
+                #endregion
+
+            }
+
+            if (isCanvasDragging && e.OriginalSource is Canvas)
+            {
+                //Multi select 
+                var currentPosition = e.GetPosition(Parent as FrameworkElement);
+                var x1 = currentPosition.X;
+                var y1 = currentPosition.Y;
+                var x2 = clickPosition.X.ZeroBased() + initialPoint.X.ZeroBased();
+                var y2 = clickPosition.Y + initialPoint.Y.ZeroBased();
+
+                if (Math.Abs(x1 - x2) > 3 && Math.Abs(y1 - y2) > 3)
+                {
+                    SelectionRectangle.Visibility = Visibility.Visible;
+                    Canvas.SetLeft(SelectionRectangle, (x1 < x2) ? x1 : x2);
+                    Canvas.SetTop(SelectionRectangle, (y1 < y2) ? y1 : y2);
+                    SelectionRectangle.Width = Math.Abs(x1 - x2);
+                    SelectionRectangle.Height = Math.Abs(y1 - y2);
+                }
             }
         }
 
@@ -171,6 +176,14 @@ namespace ProgramDesigner
             {
                 isDragging = false;
                 draggable.ReleaseMouseCapture();
+            }
+
+            var canvas = e.OriginalSource as Canvas;
+            if (canvas != null)
+            {
+                isCanvasDragging = false;
+                canvas.ReleaseMouseCapture();
+                SelectionRectangle.Visibility = Visibility.Collapsed;
             }
         }
     }

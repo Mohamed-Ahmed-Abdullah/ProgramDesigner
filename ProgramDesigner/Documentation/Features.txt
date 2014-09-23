@@ -1,3 +1,13 @@
 snap
 esc to cancel drag 
 clone speial shapres when you drag it 
+
+nobs and holes to make it looks like the puzzels 
+(think about it) if the 2 pieces not compatable no snap will happend 
+
+selecting 
+multi selecting 
+
+dropping inside 
+shrinking and expanding
+
