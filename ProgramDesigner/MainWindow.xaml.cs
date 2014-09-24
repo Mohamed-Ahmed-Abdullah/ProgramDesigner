@@ -24,6 +24,7 @@ namespace ProgramDesigner
         public MainWindow()
         {
             InitializeComponent();
+            RedDragGrip.RenderTransform = new TranslateTransform { Y = 0 };
             GreenDragGrip.RenderTransform = new TranslateTransform { Y = 70 };
             VioletDragGrip.RenderTransform = new TranslateTransform { Y = 150 };
             Utils = new Utils();
@@ -80,10 +81,23 @@ namespace ProgramDesigner
                     draggableControl.RenderTransform = transform;
                 }
 
-                //TODO:if the dragable element selected -> drag and selected elment with it  if not-> drag him normally (just use the current code)
-                //Drag
-                transform.X = (currentPosition.X - clickPosition.X) + initialPoint.X.ZeroBased();
-                transform.Y = (currentPosition.Y - clickPosition.Y) + initialPoint.Y.ZeroBased();
+                //if(current selected && multi DragGrip selected)
+                if (draggableControl.IsSelected && MainCanvas.Children.OfType<DragGrip>().Count(c => c.IsSelected) > 1)
+                {
+                    //foreach(selected child)
+                    foreach (var child in MainCanvas.Children.OfType<DragGrip>().Where(w=>w.IsSelected))
+                    {
+                        var childtransform = child.RenderTransform as TranslateTransform;
+                        //var childInitialPoint = new Point(childtransform.X, childtransform.Y);
+                        childtransform.X = (currentPosition.X - clickPosition.X) + initialPoint.X.ZeroBased();
+                        childtransform.Y = (currentPosition.Y - clickPosition.Y) + initialPoint.Y.ZeroBased();
+                    }
+                }
+                else
+                {
+                    transform.X = (currentPosition.X - clickPosition.X) + initialPoint.X.ZeroBased();
+                    transform.Y = (currentPosition.Y - clickPosition.Y) + initialPoint.Y.ZeroBased();
+                }
 
                 #region Snapping
 
