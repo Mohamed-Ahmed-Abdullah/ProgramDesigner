@@ -7,6 +7,9 @@ nobs and holes to make it looks like the puzzels
 
 selecting 
 multi selecting 
+	selection rectagle contains 
+	if you select one item the other items deselected unless you are holding he control key 
+
 
 dropping inside 
 shrinking and expanding

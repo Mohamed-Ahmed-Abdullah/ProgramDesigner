@@ -25,6 +25,7 @@ namespace ProgramDesigner
         {
             InitializeComponent();
             GreenDragGrip.RenderTransform = new TranslateTransform { Y = 70 };
+            VioletDragGrip.RenderTransform = new TranslateTransform { Y = 150 };
             Utils = new Utils();
         }
 
@@ -152,19 +153,40 @@ namespace ProgramDesigner
             if (isCanvasDragging && e.OriginalSource is Canvas)
             {
                 //Multi select 
-                var currentPosition = e.GetPosition(Parent as FrameworkElement);
+                var currentPosition = e.GetPosition(MainCanvas);
                 var x1 = currentPosition.X;
                 var y1 = currentPosition.Y;
-                var x2 = clickPosition.X.ZeroBased() + initialPoint.X.ZeroBased();
-                var y2 = clickPosition.Y + initialPoint.Y.ZeroBased();
+                var x2 = clickPosition.X.ZeroBased();
+                var y2 = clickPosition.Y.ZeroBased();
+                Extentions.Order(ref x1,ref x2);
+                Extentions.Order(ref y1,ref y2);
 
-                if (Math.Abs(x1 - x2) > 3 && Math.Abs(y1 - y2) > 3)
+                if ( x2 - x1 > 3 && y2 - y1 > 3)
                 {
                     SelectionRectangle.Visibility = Visibility.Visible;
                     Canvas.SetLeft(SelectionRectangle, (x1 < x2) ? x1 : x2);
                     Canvas.SetTop(SelectionRectangle, (y1 < y2) ? y1 : y2);
                     SelectionRectangle.Width = Math.Abs(x1 - x2);
                     SelectionRectangle.Height = Math.Abs(y1 - y2);
+
+                    foreach (FrameworkElement element in MainCanvas.Children)
+                    {
+                        var child = element as DragGrip;
+                        if (child == null)
+                            return;
+
+                        var translate = ((TranslateTransform) child.RenderTransform);
+                        var cx1 = translate.X;
+                        var cy1 = translate.Y;
+                        var cx2 = cx1 + child.ActualWidth;
+                        var cy2 = cy1 + child.ActualHeight;
+
+                        if (x1 < cx1 && x2 > cx2 && y1 < cy1 && y2 > cy2)
+                        {
+                            //select it
+                            child.IsSelected = true;
+                        }
+                    }
                 }
             }
         }
@@ -231,6 +253,16 @@ namespace ProgramDesigner
                 return true;
             }
             return false;
+        }
+
+        public static void Order(ref double x, ref double y)
+        {
+            if (x < y)
+                return;
+
+            var temp = x;
+            x = y;
+            y = temp;
         }
     }
 }

@@ -22,8 +22,15 @@
                     </Border>
                 </controls:DragGrip>
                 <controls:DragGrip x:Name="GreenDragGrip" IsDragable="True">    
-                    <Border Width="200" Height="120" Background="Green"
+                    <Border Width="150" Height="70" Background="Green"
                             BorderThickness="{Binding ElementName=GreenDragGrip,Path=IsSelected,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay,Converter={StaticResource BoolToIntConverter},ConverterParameter=5}" 
+                            BorderBrush="DeepSkyBlue">
+                    </Border>
+                </controls:DragGrip>
+
+                <controls:DragGrip x:Name="VioletDragGrip" IsDragable="True">    
+                    <Border Width="150" Height="70" Background="DarkViolet"
+                            BorderThickness="{Binding ElementName=VioletDragGrip,Path=IsSelected,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay,Converter={StaticResource BoolToIntConverter},ConverterParameter=5}" 
                             BorderBrush="DeepSkyBlue">
                     </Border>
                 </controls:DragGrip>
