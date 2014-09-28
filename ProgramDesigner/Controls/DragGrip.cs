@@ -7,6 +7,9 @@ namespace ProgramDesigner.Controls
 {
     public class DragGrip : Border,INotifyPropertyChanged
     {
+        //used in the Multidrag
+        public Point InitialPoint { get; set; }
+
         private bool _isSelected;
         public bool IsDragable { get; set; }
 

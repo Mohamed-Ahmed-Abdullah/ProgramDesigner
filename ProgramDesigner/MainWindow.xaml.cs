@@ -26,7 +26,8 @@ namespace ProgramDesigner
             InitializeComponent();
             RedDragGrip.RenderTransform = new TranslateTransform { Y = 0 };
             GreenDragGrip.RenderTransform = new TranslateTransform { Y = 70 };
-            VioletDragGrip.RenderTransform = new TranslateTransform { Y = 150 };
+            OrangeDragGrip.RenderTransform = new TranslateTransform { Y = 150 };
+            PurpulDragGrip.RenderTransform = new TranslateTransform { Y = 230 };
             Utils = new Utils();
         }
 
@@ -38,6 +39,7 @@ namespace ProgramDesigner
         private bool isCanvasDragging;
         private Point clickPosition;
         private Point initialPoint;
+        private Point _multiInitialPoint;
         private void CanvasOnMouseDown(object sender, MouseButtonEventArgs e)
         {
             var draggableControl = e.OriginalSource as FrameworkElement;
@@ -50,7 +52,15 @@ namespace ProgramDesigner
 
                 var transform = draggableControl.RenderTransform as TranslateTransform;
                 if (transform != null)
+                {
                     initialPoint = new Point(transform.X, transform.Y);
+                    _multiInitialPoint = new Point(clickPosition.X , clickPosition.Y );
+                    foreach (var child in MainCanvas.Children.OfType<DragGrip>().Where(w => w.IsSelected))
+                    {
+                        var childtransform = child.RenderTransform as TranslateTransform;
+                        child.InitialPoint = new Point(childtransform.X.ZeroBased(), childtransform.Y.ZeroBased());
+                    }
+                }
 
                 draggableControl.CaptureMouse();
             }
@@ -74,6 +84,7 @@ namespace ProgramDesigner
                 { return; }
 
                 var currentPosition = e.GetPosition(Parent as FrameworkElement);
+                var currentPosition2 = e.GetPosition(MainCanvas);
                 var transform = draggableControl.RenderTransform as TranslateTransform;
                 if (transform == null)
                 {
@@ -84,13 +95,12 @@ namespace ProgramDesigner
                 //if(current selected && multi DragGrip selected)
                 if (draggableControl.IsSelected && MainCanvas.Children.OfType<DragGrip>().Count(c => c.IsSelected) > 1)
                 {
-                    //foreach(selected child)
+                    Debug.WriteLine("");
                     foreach (var child in MainCanvas.Children.OfType<DragGrip>().Where(w=>w.IsSelected))
                     {
                         var childtransform = child.RenderTransform as TranslateTransform;
-                        //var childInitialPoint = new Point(childtransform.X, childtransform.Y);
-                        childtransform.X = (currentPosition.X - clickPosition.X) + initialPoint.X.ZeroBased();
-                        childtransform.Y = (currentPosition.Y - clickPosition.Y) + initialPoint.Y.ZeroBased();
+                        childtransform.X = child.InitialPoint.X.ZeroBased() + currentPosition2.X.ZeroBased() - _multiInitialPoint.X.ZeroBased();
+                        childtransform.Y = child.InitialPoint.Y.ZeroBased() + currentPosition2.Y.ZeroBased() - _multiInitialPoint.Y.ZeroBased();
                     }
                 }
                 else
@@ -99,69 +109,148 @@ namespace ProgramDesigner
                     transform.Y = (currentPosition.Y - clickPosition.Y) + initialPoint.Y.ZeroBased();
                 }
 
-                #region Snapping
-
-                var x = transform.X;
-                var y = transform.Y;
-
-                var xbottom = transform.X + draggableControl.ActualWidth.ZeroBased();
-                var ybottom = transform.Y + draggableControl.ActualHeight.ZeroBased();
-
-                foreach (FrameworkElement child in MainCanvas.Children)
+                if (draggableControl.IsSelected && MainCanvas.Children.OfType<DragGrip>().Count(c => c.IsSelected) > 1)
                 {
-                    //skip the dragable element
-                    if (child.Equals(draggableControl))
+                    foreach (var snapchild in MainCanvas.Children.OfType<DragGrip>().Where(w => w.IsSelected))
                     {
-                        continue;
-                    }
+                        var childTransform = snapchild.RenderTransform as TranslateTransform;
 
-                    if (!(child.RenderTransform is TranslateTransform))
-                    {
-                        continue;
-                    }
+                        #region Group Snapping
 
-                    var childX = ((TranslateTransform) child.RenderTransform).X;
-                    var childY = ((TranslateTransform) child.RenderTransform).Y;
-                    var childXBottom = childX + child.ActualWidth.ZeroBased();
-                    var childYBottom = childY + child.ActualHeight.ZeroBased();
+                        var x = childTransform.X;
+                        var y = childTransform.Y;
 
-                    //Reversed Snapping
-                    //T2 <--> B1
-                    if (y.Between(Math.Abs(childYBottom - _snapOffset.Y), Math.Abs(childYBottom + _snapOffset.Y)))
-                    {
-                        transform.Y = childYBottom;
-                    }
-                    //B2 <--> T1
-                    if (ybottom.Between(Math.Abs(childY - _snapOffset.Y), Math.Abs(childY + _snapOffset.Y)))
-                    {
-                        transform.Y = childY - draggableControl.ActualHeight.ZeroBased();
-                    }
-                    //L2 <--> R1
-                    if (x.Between(Math.Abs(childXBottom - _snapOffset.X), Math.Abs(childXBottom + _snapOffset.X)))
-                    {
-                        transform.X = childXBottom;
-                    }
-                    //R2 <--> L1
-                    if (xbottom.Between(Math.Abs(childX - _snapOffset.X), Math.Abs(childX + _snapOffset.X)))
-                    {
-                        transform.X = childX - draggableControl.ActualWidth.ZeroBased();
-                    }
+                        var xbottom = childTransform.X + snapchild.ActualWidth.ZeroBased();
+                        var ybottom = childTransform.Y + snapchild.ActualHeight.ZeroBased();
 
-                    //Similar Snapping
-                    //L2 <--> L1
-                    if (x.Between(Math.Abs(childX - _snapOffset.X), Math.Abs(childX + _snapOffset.X)))
-                    {
-                        transform.X = childX;
-                    }
-                    //B2 <--> B1
-                    if (y.Between(Math.Abs(childY - _snapOffset.Y), Math.Abs(childY + _snapOffset.Y)))
-                    {
-                        transform.Y = childY;
+                        foreach (var child in MainCanvas.Children.OfType<DragGrip>().Where(w=>!w.IsSelected))
+                        {
+                            ////skip the dragable element
+                            //if (child.Equals(snapchild))
+                            //{
+                            //    continue;
+                            //}
+
+                            if (!(child.RenderTransform is TranslateTransform))
+                            {
+                                continue;
+                            }
+
+                            var childX = ((TranslateTransform) child.RenderTransform).X;
+                            var childY = ((TranslateTransform) child.RenderTransform).Y;
+                            var childXBottom = childX + child.ActualWidth.ZeroBased();
+                            var childYBottom = childY + child.ActualHeight.ZeroBased();
+
+                            //Reversed Snapping
+                            //T2 <--> B1
+                            if (y.Between(Math.Abs(childYBottom - _snapOffset.Y), Math.Abs(childYBottom + _snapOffset.Y)))
+                            {
+                                childTransform.Y = childYBottom;
+                                Debug.WriteLine(snapchild.Name + " Snapped to ->" + child.Name);
+
+                            }
+                            //B2 <--> T1
+                            if (ybottom.Between(Math.Abs(childY - _snapOffset.Y), Math.Abs(childY + _snapOffset.Y)))
+                            {
+                                childTransform.Y = childY - snapchild.ActualHeight.ZeroBased();
+                                Debug.WriteLine(snapchild.Name + " Snapped to ->" + child.Name);
+                            }
+                            //L2 <--> R1
+                            if (x.Between(Math.Abs(childXBottom - _snapOffset.X), Math.Abs(childXBottom + _snapOffset.X)))
+                            {
+                                childTransform.X = childXBottom;
+                                Debug.WriteLine(snapchild.Name + " Snapped to ->" + child.Name);
+                            }
+                            //R2 <--> L1
+                            if (xbottom.Between(Math.Abs(childX - _snapOffset.X), Math.Abs(childX + _snapOffset.X)))
+                            {
+                                childTransform.X = childX - snapchild.ActualWidth.ZeroBased();
+                                Debug.WriteLine(snapchild.Name + " Snapped to ->" + child.Name);
+                            }
+
+                            //Similar Snapping
+                            //L2 <--> L1
+                            if (x.Between(Math.Abs(childX - _snapOffset.X), Math.Abs(childX + _snapOffset.X)))
+                            {
+                                childTransform.X = childX;
+                                Debug.WriteLine(snapchild.Name + " Snapped to ->" + child.Name);
+                            }
+                            //B2 <--> B1
+                            if (y.Between(Math.Abs(childY - _snapOffset.Y), Math.Abs(childY + _snapOffset.Y)))
+                            {
+                                childTransform.Y = childY;
+                                Debug.WriteLine(snapchild.Name + " Snapped to ->" + child.Name);
+                            }
+                        }
+
+                        #endregion
                     }
                 }
+                //else
+                {
+                    #region Snapping
 
-                #endregion
+                    var x = transform.X;
+                    var y = transform.Y;
 
+                    var xbottom = transform.X + draggableControl.ActualWidth.ZeroBased();
+                    var ybottom = transform.Y + draggableControl.ActualHeight.ZeroBased();
+
+                    foreach (FrameworkElement child in MainCanvas.Children)
+                    {
+                        //skip the dragable element
+                        if (child.Equals(draggableControl))
+                        {
+                            continue;
+                        }
+
+                        if (!(child.RenderTransform is TranslateTransform))
+                        {
+                            continue;
+                        }
+
+                        var childX = ((TranslateTransform) child.RenderTransform).X;
+                        var childY = ((TranslateTransform) child.RenderTransform).Y;
+                        var childXBottom = childX + child.ActualWidth.ZeroBased();
+                        var childYBottom = childY + child.ActualHeight.ZeroBased();
+
+                        //Reversed Snapping
+                        //T2 <--> B1
+                        if (y.Between(Math.Abs(childYBottom - _snapOffset.Y), Math.Abs(childYBottom + _snapOffset.Y)))
+                        {
+                            transform.Y = childYBottom;
+                        }
+                        //B2 <--> T1
+                        if (ybottom.Between(Math.Abs(childY - _snapOffset.Y), Math.Abs(childY + _snapOffset.Y)))
+                        {
+                            transform.Y = childY - draggableControl.ActualHeight.ZeroBased();
+                        }
+                        //L2 <--> R1
+                        if (x.Between(Math.Abs(childXBottom - _snapOffset.X), Math.Abs(childXBottom + _snapOffset.X)))
+                        {
+                            transform.X = childXBottom;
+                        }
+                        //R2 <--> L1
+                        if (xbottom.Between(Math.Abs(childX - _snapOffset.X), Math.Abs(childX + _snapOffset.X)))
+                        {
+                            transform.X = childX - draggableControl.ActualWidth.ZeroBased();
+                        }
+
+                        //Similar Snapping
+                        //L2 <--> L1
+                        if (x.Between(Math.Abs(childX - _snapOffset.X), Math.Abs(childX + _snapOffset.X)))
+                        {
+                            transform.X = childX;
+                        }
+                        //B2 <--> B1
+                        if (y.Between(Math.Abs(childY - _snapOffset.Y), Math.Abs(childY + _snapOffset.Y)))
+                        {
+                            transform.Y = childY;
+                        }
+                    }
+
+                    #endregion
+                }
             }
 
             if (isCanvasDragging && e.OriginalSource is Canvas)
