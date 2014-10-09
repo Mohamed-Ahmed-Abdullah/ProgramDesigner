@@ -93,13 +93,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Documentation\Fig\2 Xs and Ys.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Documentation\Features.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Documentation\Fig\1 Dragged Elements Area.png" />
+    <Resource Include="Documentation\Fig\2 Xs and Ys.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
