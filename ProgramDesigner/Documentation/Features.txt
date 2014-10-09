@@ -1,16 +1,3 @@
-snap
-esc to cancel drag 
-clone speial shapres when you drag it 
+clone speial shapres when you drag it 	
 
-nobs and holes to make it looks like the puzzels 
-(think about it) if the 2 pieces not compatable no snap will happend 
-
-selecting 
-multi selecting 
-	selection rectagle contains 
-	if you select one item the other items deselected unless you are holding he control key 
-
-
-dropping inside 
-shrinking and expanding
-
+start thinking about how to generate string code 

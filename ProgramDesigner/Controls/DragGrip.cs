@@ -16,8 +16,10 @@ namespace ProgramDesigner.Controls
         public bool IsSelected
         {
             get { return _isSelected; }
-            set { _isSelected = value;
-            NotifyProperty("IsSelected");
+            set
+            {
+                _isSelected = value;
+                NotifyProperty("IsSelected");
             }
         }
 

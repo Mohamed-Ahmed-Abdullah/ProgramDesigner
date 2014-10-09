@@ -20,14 +20,23 @@ namespace ProgramDesigner
     {
         public static object LocalClipboard { get; set; }
         public Utils Utils { get; set; }
-
+        //when Clone implemented 
+        //each new ite should have the TranslateTransform and SelectionChanging
         public MainWindow()
         {
             InitializeComponent();
             RedDragGrip.RenderTransform = new TranslateTransform { Y = 0 };
+            //RedDragGrip.SelectionChangingByClick += SelectionChanging;
+
             GreenDragGrip.RenderTransform = new TranslateTransform { Y = 70 };
+            //GreenDragGrip.SelectionChangingByClick += SelectionChanging;
+
             OrangeDragGrip.RenderTransform = new TranslateTransform { Y = 150 };
+            //OrangeDragGrip.SelectionChangingByClick += SelectionChanging;
+
             PurpulDragGrip.RenderTransform = new TranslateTransform { Y = 230 };
+            //PurpulDragGrip.SelectionChangingByClick += SelectionChanging;
+
             Utils = new Utils();
         }
 
@@ -327,11 +336,7 @@ namespace ProgramDesigner
 
             if (isCanvasDragging && !_rectangleDrawn)
             {
-                //deselect all
-                foreach (var element in MainCanvas.Children.OfType<DragGrip>())
-                {
-                    element.IsSelected = false;
-                }
+                DeselectAll();
             }
             var canvas = e.OriginalSource as Canvas;
             if (canvas != null)
@@ -339,6 +344,15 @@ namespace ProgramDesigner
                 isCanvasDragging = false;
                 canvas.ReleaseMouseCapture();
                 SelectionRectangle.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void DeselectAll()
+        {
+            //deselect all
+            foreach (var element in MainCanvas.Children.OfType<DragGrip>())
+            {
+                element.IsSelected = false;
             }
         }
     }
