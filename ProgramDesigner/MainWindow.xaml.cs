@@ -70,11 +70,14 @@ namespace ProgramDesigner
             {
                 clickPosition = e.GetPosition(this);
                 isCanvasDragging = true;
+                _rectangleDrawn = false;
                 canvas.CaptureMouse();
             }
         }
 
         private Point _snapOffset = new Point {X = 5, Y = 15}; 
+        private Point _canvasDragOffset = new Point {X = 3, Y = 3};
+        private bool _rectangleDrawn;
         private void CanvasOnMouseMove(object sender, MouseEventArgs e)
         {
             if (isDragging && e.OriginalSource is DragGrip)
@@ -280,11 +283,12 @@ namespace ProgramDesigner
                 var y1 = currentPosition.Y;
                 var x2 = clickPosition.X.ZeroBased();
                 var y2 = clickPosition.Y.ZeroBased();
-                Extentions.Order(ref x1,ref x2);
-                Extentions.Order(ref y1,ref y2);
+                Extentions.Order(ref x1, ref x2);
+                Extentions.Order(ref y1, ref y2);
 
-                if ( x2 - x1 > 3 && y2 - y1 > 3)
+                if (x2 - x1 > _canvasDragOffset.X && y2 - y1 > _canvasDragOffset.Y)
                 {
+                    _rectangleDrawn = true;
                     SelectionRectangle.Visibility = Visibility.Visible;
                     Canvas.SetLeft(SelectionRectangle, (x1 < x2) ? x1 : x2);
                     Canvas.SetTop(SelectionRectangle, (y1 < y2) ? y1 : y2);
@@ -305,7 +309,6 @@ namespace ProgramDesigner
 
                         if (x1 < cx1 && x2 > cx2 && y1 < cy1 && y2 > cy2)
                         {
-                            //select it
                             child.IsSelected = true;
                         }
                     }
@@ -322,6 +325,14 @@ namespace ProgramDesigner
                 draggable.ReleaseMouseCapture();
             }
 
+            if (isCanvasDragging && !_rectangleDrawn)
+            {
+                //deselect all
+                foreach (var element in MainCanvas.Children.OfType<DragGrip>())
+                {
+                    element.IsSelected = false;
+                }
+            }
             var canvas = e.OriginalSource as Canvas;
             if (canvas != null)
             {
