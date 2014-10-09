@@ -13,6 +13,8 @@ namespace ProgramDesigner.Controls
         private bool _isSelected;
         public bool IsDragable { get; set; }
 
+        public bool IsToolBarItem { get; set; }
+
         public bool IsSelected
         {
             get { return _isSelected; }
@@ -38,7 +40,6 @@ namespace ProgramDesigner.Controls
             _staringPoint = e.GetPosition(this);
             ((FrameworkElement)e.OriginalSource).CaptureMouse();
         }
-
         public bool _isDragged;
         public Point _dragOffset= new Point(3,3);
         void DragGrip_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -51,7 +52,6 @@ namespace ProgramDesigner.Controls
                 _isDragged = true;
             }
         }
-
         void DragGrip_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (_mouseDown && !_isDragged)
@@ -61,6 +61,18 @@ namespace ProgramDesigner.Controls
             _mouseDown = false;
             _isDragged = false;
             ((FrameworkElement)e.OriginalSource).ReleaseMouseCapture();
+        }
+
+        public DragGrip Clone()
+        {
+            var newItem = new DragGrip
+            {
+                InitialPoint = InitialPoint,
+                IsDragable = IsDragable,
+                IsToolBarItem = false,
+                IsSelected = IsSelected,
+            };
+            return newItem;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
