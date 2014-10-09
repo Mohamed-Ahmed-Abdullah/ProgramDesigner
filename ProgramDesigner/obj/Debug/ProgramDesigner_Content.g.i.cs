@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("documentation/features.txt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("documentation/fig/2%20xs%20and%20ys.png")]
 
 
