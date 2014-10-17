@@ -1,3 +1,37 @@
 clone speial shapres when you drag it 	
+ask for number or variable name 
 
 start thinking about how to generate string code 
+
+_______________________________________
+var xx;
+xx=2;
+if(xx>6)
+{
+    xx=1;
+}
+else
+{
+    xx=2;
+}
+((((2+xx)*2)-1)/1);
+_______________________________________
+var 
+variableName
+Numbers
+=  +   -  *  /  ;
+(  ) {  }
+if else
+
+private Size MeasureString(string candidate)
+{
+    var formattedText = new FormattedText(
+        candidate,
+        CultureInfo.CurrentUICulture,
+        FlowDirection.LeftToRight,
+        new Typeface(this.textBlock.FontFamily, this.textBlock.FontStyle, this.textBlock.FontWeight, this.textBlock.FontStretch),
+        this.textBlock.FontSize,
+        Brushes.Black);
+
+    return new Size(formattedText.Width, formattedText.Height);
+}

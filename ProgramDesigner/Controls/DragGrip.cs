@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using ProgramDesigner.Converters;
 
 namespace ProgramDesigner.Controls
 {
@@ -67,11 +72,37 @@ namespace ProgramDesigner.Controls
         {
             var newItem = new DragGrip
             {
+                Name = "Cloned"+Guid.NewGuid().ToString().Replace("-",""),
+                RenderTransform = new TranslateTransform(((TranslateTransform)RenderTransform).X, ((TranslateTransform)RenderTransform).Y),
                 InitialPoint = InitialPoint,
-                IsDragable = IsDragable,
-                IsToolBarItem = false,
-                IsSelected = IsSelected,
+                IsDragable = false,
+                IsToolBarItem = true,
+                IsSelected = false,
             };
+
+            var binding = new Binding
+            {
+                RelativeSource = new RelativeSource
+                {
+                    Mode = RelativeSourceMode.FindAncestor,
+                    AncestorType = typeof (DragGrip)
+                },
+                Path = new PropertyPath("IsSelected"),
+                Converter = new BoolToIntConverter(),
+                ConverterParameter = "5",
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                Mode = BindingMode.TwoWay
+            };
+            var border = new Border
+            {
+                Background = ((Border)Child).Background,
+                Width = ActualWidth,
+                Height = ActualHeight,
+                BorderBrush = Brushes.DeepSkyBlue,
+            };
+            border.SetBinding(Border.BorderThicknessProperty, binding);
+            newItem.Child = border;
+
             return newItem;
         }
 

@@ -7,6 +7,7 @@
     <Grid>
         <Grid.Resources>
             <converters:BoolToIntConverter x:Key="BoolToIntConverter"/>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -14,14 +15,14 @@
         </Grid.ColumnDefinitions>      
         <Border Grid.Column="1" BorderThickness="0">
             <Canvas Name="MainCanvas" MouseDown="CanvasOnMouseDown" MouseMove="CanvasOnMouseMove" MouseUp="CanvasOnMouseUp" 
-                    Background="White">                                
-                <controls:DragGrip x:Name="RedDragGrip" IsDragable="True">
-                    <Border Width="100" Height="60" Background="#FFFF2300"
+                    Background="White">                                 
+                <!--<controls:DragGrip x:Name="RedDragGrip" IsDragable="False" IsToolBarItem="True">
+                    <Border Width="100" Height="60" Background="#FFFF2300" 
                             BorderThickness="{Binding ElementName=RedDragGrip,Path=IsSelected,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay,Converter={StaticResource BoolToIntConverter},ConverterParameter=5}" 
                             BorderBrush="DeepSkyBlue">
                     </Border>
                 </controls:DragGrip>
-                <controls:DragGrip x:Name="GreenDragGrip" IsDragable="True">
+                <controls:DragGrip x:Name="GreenDragGrip" IsDragable="false" IsToolBarItem="True">
                     <Border Width="150" Height="70" Background="#FF049EC9"
                             BorderThickness="{Binding ElementName=GreenDragGrip,Path=IsSelected,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay,Converter={StaticResource BoolToIntConverter},ConverterParameter=5}" 
                             BorderBrush="DeepSkyBlue">
@@ -40,7 +41,7 @@
                             BorderThickness="{Binding ElementName=PurpulDragGrip,Path=IsSelected,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay,Converter={StaticResource BoolToIntConverter},ConverterParameter=5}" 
                             BorderBrush="DeepSkyBlue">
                     </Border>
-                </controls:DragGrip>
+                </controls:DragGrip>-->
                 <!--9FEE00 Next Color-->
                 <!--CD0074 Next Next Color-->
                 <Rectangle Name="SelectionRectangle" Width="250" Height="250" StrokeThickness="1"

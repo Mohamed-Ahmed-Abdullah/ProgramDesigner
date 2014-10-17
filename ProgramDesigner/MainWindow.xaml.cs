@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ProgramDesigner.Controls;
+using ProgramDesigner.Converters;
 
 namespace ProgramDesigner
 {
@@ -25,16 +26,52 @@ namespace ProgramDesigner
         public MainWindow()
         {
             InitializeComponent();
-            RedDragGrip.RenderTransform = new TranslateTransform { Y = 0 };
-            //RedDragGrip.SelectionChangingByClick += SelectionChanging;
+            Loaded+= (a,b) => { };
 
-            GreenDragGrip.RenderTransform = new TranslateTransform { Y = 70 };
-            //GreenDragGrip.SelectionChangingByClick += SelectionChanging;
+            var newItem = new DragGrip
+            {
+                Name = "Cloned" + Guid.NewGuid().ToString().Replace("-", ""),
+                RenderTransform = new TranslateTransform(0, 0),
+                IsDragable = false,
+                IsToolBarItem = true,
+                IsSelected = false,
+            };
 
-            OrangeDragGrip.RenderTransform = new TranslateTransform { Y = 150 };
-            //OrangeDragGrip.SelectionChangingByClick += SelectionChanging;
+            var binding = new Binding
+            {
+                RelativeSource = new RelativeSource
+                {
+                    Mode = RelativeSourceMode.FindAncestor,
+                    AncestorType = typeof(DragGrip)
+                },
+                Path = new PropertyPath("IsSelected"),
+                Converter = new BoolToIntConverter(),
+                ConverterParameter = "5",
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                Mode = BindingMode.TwoWay
+            };
+            var border = new Border
+            {
+                Background = Brushes.Red,
+                Width = 100,
+                Height = 60,
+                BorderBrush = Brushes.DeepSkyBlue,
+            };
+            border.SetBinding(Border.BorderThicknessProperty, binding);
+            newItem.Child = border;
 
-            PurpulDragGrip.RenderTransform = new TranslateTransform { Y = 230 };
+            MainCanvas.Children.Add(newItem);
+
+            //RedDragGrip.RenderTransform = new TranslateTransform { Y = 0 };
+            ////RedDragGrip.SelectionChangingByClick += SelectionChanging;
+
+            //GreenDragGrip.RenderTransform = new TranslateTransform { Y = 70 };
+            ////GreenDragGrip.SelectionChangingByClick += SelectionChanging;
+
+            //OrangeDragGrip.RenderTransform = new TranslateTransform { Y = 150 };
+            ////OrangeDragGrip.SelectionChangingByClick += SelectionChanging;
+
+            //PurpulDragGrip.RenderTransform = new TranslateTransform { Y = 230 };
             //PurpulDragGrip.SelectionChangingByClick += SelectionChanging;
 
             Utils = new Utils();
@@ -72,6 +109,14 @@ namespace ProgramDesigner
                 }
 
                 draggableControl.CaptureMouse();
+
+                if (((DragGrip)draggableControl).IsToolBarItem)
+                {
+                    MainCanvas.Children.Add(((DragGrip)draggableControl).Clone());
+                    ((DragGrip) draggableControl).IsToolBarItem = false;
+                    ((DragGrip) draggableControl).IsDragable = true;
+                }
+
             }
 
             var canvas = e.OriginalSource as Canvas;
@@ -304,12 +349,8 @@ namespace ProgramDesigner
                     SelectionRectangle.Width = Math.Abs(x1 - x2);
                     SelectionRectangle.Height = Math.Abs(y1 - y2);
 
-                    foreach (FrameworkElement element in MainCanvas.Children)
+                    foreach (var child in MainCanvas.Children.OfType<DragGrip>())
                     {
-                        var child = element as DragGrip;
-                        if (child == null)
-                            return;
-
                         var translate = ((TranslateTransform) child.RenderTransform);
                         var cx1 = translate.X;
                         var cy1 = translate.Y;
@@ -319,10 +360,22 @@ namespace ProgramDesigner
                         if (x1 < cx1 && x2 > cx2 && y1 < cy1 && y2 > cy2)
                         {
                             child.IsSelected = true;
+                            Debug.WriteLine("####"+child.Name);
                         }
                     }
                 }
             }
+        }
+
+        public string G()
+        {
+            var result = "";
+            foreach (var child in MainCanvas.Children.OfType<DragGrip>())
+            {
+                result += child.Name + ":" + ((TranslateTransform)child.RenderTransform).X + "," + ((TranslateTransform)child.RenderTransform).Y + @"
+";
+            }
+            return result;
         }
 
         private void CanvasOnMouseUp(object sender, MouseButtonEventArgs e)
