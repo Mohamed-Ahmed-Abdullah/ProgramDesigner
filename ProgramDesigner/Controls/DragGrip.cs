@@ -89,16 +89,25 @@ namespace ProgramDesigner.Controls
                 },
                 Path = new PropertyPath("IsSelected"),
                 Converter = new BoolToIntConverter(),
-                ConverterParameter = "5",
+                ConverterParameter = "2.5",
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                 Mode = BindingMode.TwoWay
             };
             var border = new Border
             {
-                Background = ((Border)Child).Background,
+                Background = ((Border) Child).Background,
                 Width = ActualWidth,
                 Height = ActualHeight,
                 BorderBrush = Brushes.DeepSkyBlue,
+                Child = new TextBlock
+                    {
+                        Text = ((TextBlock)((Border)Child).Child).Text,
+                        FontSize = 16,
+                        Foreground = Brushes.White,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = ((TextBlock)((Border)Child).Child).Margin
+                    }
             };
             border.SetBinding(Border.BorderThicknessProperty, binding);
             newItem.Child = border;

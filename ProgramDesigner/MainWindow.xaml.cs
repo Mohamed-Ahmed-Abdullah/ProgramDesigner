@@ -28,10 +28,35 @@ namespace ProgramDesigner
             InitializeComponent();
             Loaded+= (a,b) => { };
 
+
+            MainCanvas.Children.Add(GetItem("if", new TranslateTransform(50, 80), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0)));
+            MainCanvas.Children.Add(GetItem("else", new TranslateTransform(50, 110), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0)));
+            MainCanvas.Children.Add(GetItem("var", new TranslateTransform(50, 140), 50, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0)));
+            MainCanvas.Children.Add(GetItem("variable", new TranslateTransform(50, 170), 65, Brushes.DeepSkyBlue, new Thickness(-4, 0, 0, 0)));
+            MainCanvas.Children.Add(GetItem("variable", new TranslateTransform(50, 170), 65, Brushes.DeepSkyBlue, new Thickness(-4, 0, 0, 0)));
+            MainCanvas.Children.Add(GetItem("number", new TranslateTransform(50, 200), 65, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0)));
+
+            MainCanvas.Children.Add(GetItem("(", new TranslateTransform(50, 230), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem(")", new TranslateTransform(50, 260), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem("{", new TranslateTransform(50, 290), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem("}", new TranslateTransform(50, 320), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem("+", new TranslateTransform(50, 350), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem("-", new TranslateTransform(50, 380), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem("*", new TranslateTransform(50, 410), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem("/", new TranslateTransform(50, 440), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem("=", new TranslateTransform(50, 470), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            MainCanvas.Children.Add(GetItem(";", new TranslateTransform(50, 500), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+
+            Utils = new Utils();
+        }
+
+        public DragGrip GetItem(string text,TranslateTransform translateTransform,
+            double width,Brush backgound,Thickness margin)
+        {
             var newItem = new DragGrip
             {
                 Name = "Cloned" + Guid.NewGuid().ToString().Replace("-", ""),
-                RenderTransform = new TranslateTransform(0, 0),
+                RenderTransform = translateTransform,
                 IsDragable = false,
                 IsToolBarItem = true,
                 IsSelected = false,
@@ -46,35 +71,31 @@ namespace ProgramDesigner
                 },
                 Path = new PropertyPath("IsSelected"),
                 Converter = new BoolToIntConverter(),
-                ConverterParameter = "5",
+                ConverterParameter = "2.5",
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                 Mode = BindingMode.TwoWay
             };
             var border = new Border
             {
-                Background = Brushes.Red,
-                Width = 100,
-                Height = 60,
+                Background = backgound,
+                Width = width,
+                Height = 22,
                 BorderBrush = Brushes.DeepSkyBlue,
+                Child =
+                    new TextBlock
+                    {
+                        Text = text,
+                        FontSize = 16,
+                        Foreground = Brushes.White,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = margin
+                    }
             };
             border.SetBinding(Border.BorderThicknessProperty, binding);
             newItem.Child = border;
 
-            MainCanvas.Children.Add(newItem);
-
-            //RedDragGrip.RenderTransform = new TranslateTransform { Y = 0 };
-            ////RedDragGrip.SelectionChangingByClick += SelectionChanging;
-
-            //GreenDragGrip.RenderTransform = new TranslateTransform { Y = 70 };
-            ////GreenDragGrip.SelectionChangingByClick += SelectionChanging;
-
-            //OrangeDragGrip.RenderTransform = new TranslateTransform { Y = 150 };
-            ////OrangeDragGrip.SelectionChangingByClick += SelectionChanging;
-
-            //PurpulDragGrip.RenderTransform = new TranslateTransform { Y = 230 };
-            //PurpulDragGrip.SelectionChangingByClick += SelectionChanging;
-
-            Utils = new Utils();
+            return newItem;
         }
 
         private int _offset = 5;//pixel

@@ -8,8 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("documentation/fig/multiselect.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("documentation/fig/multiselect2.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("documentation/fig/multiselect3.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("documentation/fig/designer.png")]
 
 
