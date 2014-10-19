@@ -8,19 +8,46 @@
         <Grid.Resources>
             <converters:BoolToIntConverter x:Key="BoolToIntConverter"/>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:BoolToThicknessConverter x:Key="BoolToThicknessConverter"/>
         </Grid.Resources>
         <Border BorderThickness="0">
             <Canvas Name="MainCanvas" MouseDown="CanvasOnMouseDown" MouseMove="CanvasOnMouseMove" MouseUp="CanvasOnMouseUp" 
                     Background="White">
+                
                 <Rectangle Name="SelectionRectangle" Width="250" Height="250" StrokeThickness="1"
                            Stroke="DeepSkyBlue" StrokeDashArray="7 7" Visibility="Collapsed" />
-                <!--<Grid Width="41" Height="23" Background="OrangeRed" >
-                    <TextBlock Foreground="White" Text="if" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-7,0,0,0"></TextBlock>
-                </Grid>-->
+                
+                <Rectangle Canvas.Left="180" 
+                           Width="1" Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Canvas}},Path=ActualHeight}"
+                           Stroke="OrangeRed" />
+                
+                <Rectangle Canvas.Top="70"
+                           Width="180" Height="1"
+                           Stroke="OrangeRed"></Rectangle>
 
+                <Border Name="Control" BorderBrush="Orange"
+                        BorderThickness="{Binding IsControlsVisible,Converter={StaticResource BoolToThicknessConverter},UpdateSourceTrigger=PropertyChanged}" 
+                        CornerRadius="0" Canvas.Left="20" Canvas.Top="5">
+                    <TextBlock Foreground="Orange" Padding="10,0"
+                               Text="Control"></TextBlock>
+                </Border>
+                
+                <Border Name="Var" BorderBrush="DeepSkyBlue" CornerRadius="0"
+                        BorderThickness="{Binding IsVarVisible,Converter={StaticResource BoolToThicknessConverter},UpdateSourceTrigger=PropertyChanged}" 
+                        Canvas.Left="110" Canvas.Top="5">
+                    <TextBlock Foreground="DeepSkyBlue" Padding="10,0"
+                               Text="Var"></TextBlock>
+                </Border>
+                
+                <Border Name="Token" BorderBrush="DarkViolet" CornerRadius="0"
+                        BorderThickness="{Binding IsTokenVisible,Converter={StaticResource BoolToThicknessConverter},UpdateSourceTrigger=PropertyChanged}" 
+                        Canvas.Left="20" Canvas.Top="35">
+                    <TextBlock Foreground="DarkViolet" Padding="10,0"
+                               Text="Token"></TextBlock>
+                </Border>
             </Canvas>
         </Border>
-        <Grid>
+        <!--<Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30*"/>
                 <RowDefinition Height="30*"/>
@@ -33,6 +60,6 @@
 
             <Border BorderThickness="0,0,.5,0" BorderBrush="OrangeRed" Grid.RowSpan="3"></Border>
             <Border BorderThickness="0,0,0,.5" BorderBrush="OrangeRed" Grid.RowSpan="2" Grid.Row="0" Grid.Column="0"></Border>
-        </Grid>
+        </Grid>-->
     </Grid>
 </Window>

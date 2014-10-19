@@ -1,24 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ProgramDesigner.Controls;
 using ProgramDesigner.Converters;
+using System.Collections.Generic;
 
 namespace ProgramDesigner
 {
-    public partial class MainWindow
+    public partial class MainWindow : INotifyPropertyChanged
     {
+        private List<DragGrip> ControlList { get;set; }
+        private List<DragGrip> VarList { get;set; }
+        private List<DragGrip> TokenList { get;set; }
+    
+        private bool _isControlsVisible=true;
+        public bool IsControlsVisible
+        {
+            get { return _isControlsVisible; }
+            set { _isControlsVisible = value; }
+        }
+
+        private bool _isVarVisible = true;
+        public bool IsVarVisible
+        {
+            get { return _isVarVisible; }
+            set { _isVarVisible = value; }
+        }
+
+        private bool _isTokenVisible = true;
+        public bool IsTokenVisible
+        {
+            get { return _isTokenVisible; }
+            set { _isTokenVisible = value; }
+        }
+
+
         public static object LocalClipboard { get; set; }
         public Utils Utils { get; set; }
         //when Clone implemented 
@@ -26,36 +49,75 @@ namespace ProgramDesigner
         public MainWindow()
         {
             InitializeComponent();
+            ControlList = new List<DragGrip>();
+            VarList = new List<DragGrip>();
+            TokenList = new List<DragGrip>();
+
             Loaded+= (a,b) => { };
 
+            AddInLists(ControlList,GetItem("if", "if", new TranslateTransform(50, 80), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0)));
+            AddInLists(ControlList,GetItem("else", "else", new TranslateTransform(50, 110), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0)));
+            AddInLists(VarList,GetItem("var", "var", new TranslateTransform(50, 140), 50, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0)));
+            AddInLists(VarList,GetItem("variable","variable", new TranslateTransform(50, 170), 65, Brushes.DeepSkyBlue, new Thickness(-4, 0, 0, 0)));
+            AddInLists(VarList,GetItem("number","number", new TranslateTransform(50, 200), 65, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0)));
 
-            MainCanvas.Children.Add(GetItem("if", new TranslateTransform(50, 80), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0)));
-            MainCanvas.Children.Add(GetItem("else", new TranslateTransform(50, 110), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0)));
-            MainCanvas.Children.Add(GetItem("var", new TranslateTransform(50, 140), 50, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0)));
-            MainCanvas.Children.Add(GetItem("variable", new TranslateTransform(50, 170), 65, Brushes.DeepSkyBlue, new Thickness(-4, 0, 0, 0)));
-            MainCanvas.Children.Add(GetItem("variable", new TranslateTransform(50, 170), 65, Brushes.DeepSkyBlue, new Thickness(-4, 0, 0, 0)));
-            MainCanvas.Children.Add(GetItem("number", new TranslateTransform(50, 200), 65, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0)));
-
-            MainCanvas.Children.Add(GetItem("(", new TranslateTransform(50, 230), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem(")", new TranslateTransform(50, 260), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem("{", new TranslateTransform(50, 290), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem("}", new TranslateTransform(50, 320), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem("+", new TranslateTransform(50, 350), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem("-", new TranslateTransform(50, 380), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem("*", new TranslateTransform(50, 410), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem("/", new TranslateTransform(50, 440), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem("=", new TranslateTransform(50, 470), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            MainCanvas.Children.Add(GetItem(";", new TranslateTransform(50, 500), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList,GetItem("OpenRoundBracket", "(", new TranslateTransform(50, 230), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("CloseRoundBracket", ")", new TranslateTransform(50, 260), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("OpenBlockBracket", "{", new TranslateTransform(50, 290), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("CloseBlockBracket", "}", new TranslateTransform(50, 320), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("Plus", "+", new TranslateTransform(50, 350), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("Minus", "-", new TranslateTransform(50, 380), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("Mult", "*", new TranslateTransform(50, 410), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("Div", "/", new TranslateTransform(50, 440), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("Equal", "=", new TranslateTransform(50, 470), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(TokenList, GetItem("Semi", ";", new TranslateTransform(50, 500), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
 
             Utils = new Utils();
+            DataContext = this;
+
+            #region ToolBar Items Visibility
+            Control.MouseDown += (a, b) =>
+            {
+                _isControlsVisible = !_isControlsVisible;
+                ControlList.ForEach(f =>
+                {
+                    f.Visibility = _isControlsVisible ? Visibility.Visible : Visibility.Collapsed;
+                });
+                NotifyPropertyChanged("");
+            };
+            Var.MouseDown += (a, b) =>
+            {
+                _isVarVisible = !_isVarVisible;
+                VarList.ForEach(f =>
+                {
+                    f.Visibility = _isVarVisible ? Visibility.Visible : Visibility.Collapsed;
+                });
+                NotifyPropertyChanged("");
+            };
+            Token.MouseDown += (a, b) =>
+            {
+                _isTokenVisible = !_isTokenVisible;
+                TokenList.ForEach(f =>
+                {
+                    f.Visibility = _isTokenVisible ? Visibility.Visible : Visibility.Collapsed;
+                });
+                NotifyPropertyChanged("");
+            };
+            #endregion
         }
 
-        public DragGrip GetItem(string text,TranslateTransform translateTransform,
+        private void AddInLists(List<DragGrip> list,DragGrip item)
+        {
+            list.Add(item);
+            MainCanvas.Children.Add(item);
+        }
+
+        public DragGrip GetItem(string name ,string text,TranslateTransform translateTransform,
             double width,Brush backgound,Thickness margin)
         {
             var newItem = new DragGrip
             {
-                Name = "Cloned" + Guid.NewGuid().ToString().Replace("-", ""),
+                Name = name,
                 RenderTransform = translateTransform,
                 IsDragable = false,
                 IsToolBarItem = true,
@@ -153,6 +215,7 @@ namespace ProgramDesigner
         private Point _snapOffset = new Point {X = 5, Y = 15}; 
         private Point _canvasDragOffset = new Point {X = 3, Y = 3};
         private bool _rectangleDrawn;
+
         private void CanvasOnMouseMove(object sender, MouseEventArgs e)
         {
             if (isDragging && e.OriginalSource is DragGrip)
@@ -173,7 +236,7 @@ namespace ProgramDesigner
                 //if(current selected && multi DragGrip selected)
                 if (draggableControl.IsSelected && MainCanvas.Children.OfType<DragGrip>().Count(c => c.IsSelected) > 1)
                 {
-                    //Debug.WriteLine("");
+                    //foreach(selected items) { move them }
                     foreach (var child in MainCanvas.Children.OfType<DragGrip>().Where(w=>w.IsSelected))
                     {
                         var childtransform = child.RenderTransform as TranslateTransform;
@@ -200,10 +263,7 @@ namespace ProgramDesigner
                     x2 = seletedItems.Max(m => ((TranslateTransform) m.RenderTransform).X + m.ActualWidth);
                     y2 = seletedItems.Max(m => ((TranslateTransform) m.RenderTransform).Y + m.ActualHeight);
 
-                    //figure out the Xs and Ys see Fig.2
-                    var notSelectedItems = MainCanvas.Children.OfType<DragGrip>().Where(w => !w.IsSelected).ToList();
-                    //var Xs = notSelectedItems.Select(s => ((TranslateTransform)s.RenderTransform).X).ToList();
-                    //var Ys = notSelectedItems.Select(s => ((TranslateTransform)s.RenderTransform).Y).ToList();
+                    var notSelectedItems = MainCanvas.Children.OfType<DragGrip>().Where(w => !w.IsSelected && w.IsDragable).ToList();
 
                     //calculate (x1`,y1`) and (x2`,y2`)
                     double x1_ = x1, y1_ = y1, x2_ = x2, y2_ = y2;
@@ -292,7 +352,7 @@ namespace ProgramDesigner
                     var xbottom = transform.X + draggableControl.ActualWidth.ZeroBased();
                     var ybottom = transform.Y + draggableControl.ActualHeight.ZeroBased();
 
-                    foreach (FrameworkElement child in MainCanvas.Children)
+                    foreach (DragGrip child in MainCanvas.Children.OfType<DragGrip>().Where(w=>w.IsDragable))
                     {
                         //skip the dragable element
                         if (child.Equals(draggableControl))
@@ -428,6 +488,13 @@ namespace ProgramDesigner
             {
                 element.IsSelected = false;
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this,new PropertyChangedEventArgs(propertyName));
         }
     }
 
