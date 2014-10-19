@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using ProgramDesigner.Converters;
@@ -38,8 +39,11 @@ namespace ProgramDesigner.Controls
         }
         private bool _mouseDown;
         private Point _staringPoint;
-        void DragGrip_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        void DragGrip_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.LeftButton != MouseButtonState.Pressed)
+                return;
+
             _mouseDown = true;
             _isDragged = false;
             _staringPoint = e.GetPosition(this);
@@ -47,7 +51,7 @@ namespace ProgramDesigner.Controls
         }
         public bool _isDragged;
         public Point _dragOffset= new Point(3,3);
-        void DragGrip_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        void DragGrip_MouseMove(object sender, MouseEventArgs e)
         {
             var currentPosition = e.GetPosition(this);
             if (_mouseDown && 
@@ -57,7 +61,7 @@ namespace ProgramDesigner.Controls
                 _isDragged = true;
             }
         }
-        void DragGrip_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        void DragGrip_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (_mouseDown && !_isDragged)
             {
@@ -110,6 +114,7 @@ namespace ProgramDesigner.Controls
                     }
             };
             border.SetBinding(Border.BorderThicknessProperty, binding);
+            newItem.ContextMenu = ((Border)Child).ContextMenu;
             newItem.Child = border;
 
             return newItem;

@@ -11,11 +11,24 @@ using System.Windows.Shapes;
 using ProgramDesigner.Controls;
 using ProgramDesigner.Converters;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ProgramDesigner
 {
     public partial class MainWindow : INotifyPropertyChanged
     {
+        private bool _isNameDialogVisible;
+        public bool IsNameDialogVisible
+        {
+            get { return _isNameDialogVisible; }
+            set
+            {
+                _isNameDialogVisible = value;
+                NotifyPropertyChanged("IsNameDialogVisible");
+            }
+        }
+        public DragGrip RenameDragGrip { get; set; }
+
         private List<DragGrip> ControlList { get;set; }
         private List<DragGrip> VarList { get;set; }
         private List<DragGrip> TokenList { get;set; }
@@ -55,22 +68,21 @@ namespace ProgramDesigner
 
             Loaded+= (a,b) => { };
 
-            AddInLists(ControlList,GetItem("if", "if", new TranslateTransform(50, 80), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0)));
-            AddInLists(ControlList,GetItem("else", "else", new TranslateTransform(50, 110), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0)));
-            AddInLists(VarList,GetItem("var", "var", new TranslateTransform(50, 140), 50, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0)));
-            AddInLists(VarList,GetItem("variable","variable", new TranslateTransform(50, 170), 65, Brushes.DeepSkyBlue, new Thickness(-4, 0, 0, 0)));
-            AddInLists(VarList,GetItem("number","number", new TranslateTransform(50, 200), 65, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0)));
-
-            AddInLists(TokenList,GetItem("OpenRoundBracket", "(", new TranslateTransform(50, 230), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("CloseRoundBracket", ")", new TranslateTransform(50, 260), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("OpenBlockBracket", "{", new TranslateTransform(50, 290), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("CloseBlockBracket", "}", new TranslateTransform(50, 320), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("Plus", "+", new TranslateTransform(50, 350), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("Minus", "-", new TranslateTransform(50, 380), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("Mult", "*", new TranslateTransform(50, 410), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("Div", "/", new TranslateTransform(50, 440), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("Equal", "=", new TranslateTransform(50, 470), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
-            AddInLists(TokenList, GetItem("Semi", ";", new TranslateTransform(50, 500), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0)));
+            AddInLists(ControlList, GetItem("if", "if", new TranslateTransform(50, 80), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0), "ContextMenu1"));
+            AddInLists(ControlList, GetItem("else", "else", new TranslateTransform(50, 110), 50, Brushes.Orange, new Thickness(-7, 0, 0, 0), "ContextMenu1"));
+            AddInLists(VarList, GetItem("var", "var", new TranslateTransform(50, 140), 50, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0), "ContextMenu1"));
+            AddInLists(VarList, GetItem("variable", "variable", new TranslateTransform(50, 170), 65, Brushes.DeepSkyBlue, new Thickness(-4, 0, 0, 0), "ContextMenu2"));
+            AddInLists(VarList, GetItem("number", "number", new TranslateTransform(50, 200), 65, Brushes.DeepSkyBlue, new Thickness(-7, 0, 0, 0), "ContextMenu2"));
+            AddInLists(TokenList, GetItem("OpenRoundBracket", "(", new TranslateTransform(50, 230), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("CloseRoundBracket", ")", new TranslateTransform(50, 260), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("OpenBlockBracket", "{", new TranslateTransform(50, 290), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("CloseBlockBracket", "}", new TranslateTransform(50, 320), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Plus", "+", new TranslateTransform(50, 350), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Minus", "-", new TranslateTransform(50, 380), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Mult", "*", new TranslateTransform(50, 410), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Div", "/", new TranslateTransform(50, 440), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Equal", "=", new TranslateTransform(50, 470), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Semi", ";", new TranslateTransform(50, 500), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
 
             Utils = new Utils();
             DataContext = this;
@@ -78,6 +90,9 @@ namespace ProgramDesigner
             #region ToolBar Items Visibility
             Control.MouseDown += (a, b) =>
             {
+                if (b.LeftButton != MouseButtonState.Pressed)
+                    return;
+
                 _isControlsVisible = !_isControlsVisible;
                 ControlList.ForEach(f =>
                 {
@@ -87,6 +102,9 @@ namespace ProgramDesigner
             };
             Var.MouseDown += (a, b) =>
             {
+                if (b.LeftButton != MouseButtonState.Pressed)
+                    return;
+
                 _isVarVisible = !_isVarVisible;
                 VarList.ForEach(f =>
                 {
@@ -96,6 +114,9 @@ namespace ProgramDesigner
             };
             Token.MouseDown += (a, b) =>
             {
+                if (b.LeftButton != MouseButtonState.Pressed)
+                    return;
+
                 _isTokenVisible = !_isTokenVisible;
                 TokenList.ForEach(f =>
                 {
@@ -112,8 +133,15 @@ namespace ProgramDesigner
             MainCanvas.Children.Add(item);
         }
 
+        //private ContextMenu GetNewContext()
+        //{
+        //    var contextMenue = new ContextMenu();
+        //    contextMenue.item
+        //    return contextMenue;
+        //}
+
         public DragGrip GetItem(string name ,string text,TranslateTransform translateTransform,
-            double width,Brush backgound,Thickness margin)
+            double width,Brush backgound,Thickness margin,string contextMenuName)
         {
             var newItem = new DragGrip
             {
@@ -156,6 +184,7 @@ namespace ProgramDesigner
             };
             border.SetBinding(Border.BorderThicknessProperty, binding);
             newItem.Child = border;
+            newItem.ContextMenu = MainCanvas.FindResource(contextMenuName) as ContextMenu;
 
             return newItem;
         }
@@ -495,6 +524,48 @@ namespace ProgramDesigner
         {
             if (PropertyChanged != null)
                 PropertyChanged(this,new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void MenuItemOnDelete(object sender, RoutedEventArgs e)
+        {
+            var selected = MainCanvas.Children.OfType<DragGrip>().Where(w => w.IsSelected).ToList();
+            if (selected.Count >= 1)
+            {
+                selected.ForEach(f => MainCanvas.Children.Remove(f));
+            }
+            else
+            {
+                MainCanvas.Children.Remove(((ContextMenu) ((MenuItem) sender).CommandParameter).PlacementTarget);
+            }
+        }
+
+        private void MenuItemOnRename(object sender, RoutedEventArgs e)
+        {
+            RenameDragGrip = (DragGrip)((ContextMenu)((MenuItem)sender).CommandParameter).PlacementTarget;
+            TextBoxRename.Text = ((TextBlock) ((Border) RenameDragGrip.Child).Child).Text;
+            IsNameDialogVisible = true;
+        }
+
+        private void RenameOnClick(object sender, RoutedEventArgs e)
+        {
+            IsNameDialogVisible = false;
+            if (TextBoxRename.Text.Count() >= "variable".Count())
+            {
+                ((TextBlock)((Border)RenameDragGrip.Child).Child).Text = TextBoxRename.Text;
+                ((Border) RenameDragGrip.Child).Width = MeasureString(TextBoxRename.Text).Width;
+            }
+        }
+        private Size MeasureString(string candidate)
+        {
+            var formattedText = new FormattedText(
+                candidate,
+                CultureInfo.CurrentUICulture,
+                FlowDirection.LeftToRight,
+                new Typeface(TextBoxRename.FontFamily, TextBoxRename.FontStyle, TextBoxRename.FontWeight, TextBoxRename.FontStretch),
+                TextBoxRename.FontSize,
+                Brushes.Black);
+
+            return new Size(formattedText.Width, formattedText.Height);
         }
     }
 

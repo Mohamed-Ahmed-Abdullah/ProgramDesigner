@@ -1,8 +1,6 @@
-clone speial shapres when you drag it 	
-ask for number or variable name 
-
-start thinking about how to generate string code 
-
+Delete Multible
+Rename 
+Generate String 
 _______________________________________
 var xx;
 xx=2;
