@@ -1,6 +1,19 @@
 Delete Multible
 Rename 
 Generate String 
+
+Bugs 
+_______________________________________
+ 
+
+
+
+Inhancments 
+_______________________________________
+-edit mdoe 
+- review this ugly code 
+- make the color dinamic resources 
+
 _______________________________________
 var xx;
 xx=2;

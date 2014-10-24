@@ -11,7 +11,7 @@ using ProgramDesigner.Converters;
 
 namespace ProgramDesigner.Controls
 {
-    public class DragGrip : Border,INotifyPropertyChanged
+    public class DragGrip : Border, INotifyPropertyChanged
     {
         //used in the Multidrag
         public Point InitialPoint { get; set; }
@@ -31,15 +31,19 @@ namespace ProgramDesigner.Controls
             }
         }
 
+        public string ContextMenuName { get; set; }
+
         public DragGrip()
         {
             MouseDown += DragGrip_MouseDown;
             MouseUp += DragGrip_MouseUp;
             MouseMove += DragGrip_MouseMove;
         }
+
         private bool _mouseDown;
         private Point _staringPoint;
-        void DragGrip_MouseDown(object sender, MouseButtonEventArgs e)
+
+        private void DragGrip_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton != MouseButtonState.Pressed)
                 return;
@@ -47,21 +51,24 @@ namespace ProgramDesigner.Controls
             _mouseDown = true;
             _isDragged = false;
             _staringPoint = e.GetPosition(this);
-            ((FrameworkElement)e.OriginalSource).CaptureMouse();
+            ((FrameworkElement) e.OriginalSource).CaptureMouse();
         }
+
         public bool _isDragged;
-        public Point _dragOffset= new Point(3,3);
-        void DragGrip_MouseMove(object sender, MouseEventArgs e)
+        public Point _dragOffset = new Point(3, 3);
+
+        private void DragGrip_MouseMove(object sender, MouseEventArgs e)
         {
             var currentPosition = e.GetPosition(this);
-            if (_mouseDown && 
-                ( Math.Abs(_staringPoint.X - currentPosition.X) > _dragOffset.X
-                || Math.Abs(_staringPoint.Y - currentPosition.Y) > _dragOffset.Y))
+            if (_mouseDown &&
+                (Math.Abs(_staringPoint.X - currentPosition.X) > _dragOffset.X
+                 || Math.Abs(_staringPoint.Y - currentPosition.Y) > _dragOffset.Y))
             {
                 _isDragged = true;
             }
         }
-        void DragGrip_MouseUp(object sender, MouseButtonEventArgs e)
+
+        private void DragGrip_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (_mouseDown && !_isDragged)
             {
@@ -69,19 +76,22 @@ namespace ProgramDesigner.Controls
             }
             _mouseDown = false;
             _isDragged = false;
-            ((FrameworkElement)e.OriginalSource).ReleaseMouseCapture();
+            ((FrameworkElement) e.OriginalSource).ReleaseMouseCapture();
         }
 
         public DragGrip Clone()
         {
             var newItem = new DragGrip
             {
-                Name = "Cloned"+Guid.NewGuid().ToString().Replace("-",""),
-                RenderTransform = new TranslateTransform(((TranslateTransform)RenderTransform).X, ((TranslateTransform)RenderTransform).Y),
+                Name = "Cloned" + Guid.NewGuid().ToString().Replace("-", ""),
+                RenderTransform =
+                    new TranslateTransform(((TranslateTransform) RenderTransform).X,
+                        ((TranslateTransform) RenderTransform).Y),
                 InitialPoint = InitialPoint,
                 IsDragable = false,
                 IsToolBarItem = true,
                 IsSelected = false,
+                ContextMenuName = ContextMenuName,
             };
 
             var binding = new Binding
@@ -104,21 +114,56 @@ namespace ProgramDesigner.Controls
                 Height = ActualHeight,
                 BorderBrush = Brushes.DeepSkyBlue,
                 Child = new TextBlock
-                    {
-                        Text = ((TextBlock)((Border)Child).Child).Text,
-                        FontSize = 16,
-                        Foreground = Brushes.White,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        Margin = ((TextBlock)((Border)Child).Child).Margin
-                    }
+                {
+                    Text = ((TextBlock) ((Border) Child).Child).Text,
+                    FontSize = 16,
+                    Foreground = Brushes.White,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = ((TextBlock) ((Border) Child).Child).Margin
+                }
             };
-            border.SetBinding(Border.BorderThicknessProperty, binding);
-            newItem.ContextMenu = ((Border)Child).ContextMenu;
-            newItem.Child = border;
 
+            border.SetBinding(Border.BorderThicknessProperty, binding);
+            newItem.ContextMenu = (ContextMenu)((Canvas)Parent).FindResource(ContextMenuName);
+            newItem.Child = border;
             return newItem;
         }
+
+
+        //private ContextMenu GetContextMenu1()
+        //{
+        //    var mainCanvas = (Canvas)Parent;
+        //    var border2 = (Border)mainCanvas.Parent;
+        //    var grid = (Grid)border2.Parent;
+        //    var mainWindow = (MainWindow)grid.Parent;
+
+        //    var contextMenu = new ContextMenu();
+        //    var menueItem = new MenuItem { Header = "Delete" };
+        //    menueItem.Click += mainWindow.MenuItemOnDelete;
+        //    contextMenu.Items.Add(menueItem);
+        //    return contextMenu;
+        //}
+
+        //private ContextMenu GetContextMenu2()
+        //{
+        //    var mainCanvas = (Canvas)Parent;
+        //    var border2 = (Border)mainCanvas.Parent;
+        //    var grid = (Grid)border2.Parent;
+        //    var mainWindow = (MainWindow)grid.Parent;
+
+        //    var contextMenu = new ContextMenu();
+
+        //    var deleteItem = new MenuItem { Header = "Delete" };
+        //    deleteItem.Click += mainWindow.MenuItemOnDelete;
+
+        //    var renameItem = new MenuItem { Header = "Rename" };
+        //    renameItem.Click += mainWindow.MenuItemOnRename;
+
+        //    contextMenu.Items.Add(deleteItem);
+        //    contextMenu.Items.Add(renameItem);
+        //    return contextMenu;
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyProperty(string propertyName)

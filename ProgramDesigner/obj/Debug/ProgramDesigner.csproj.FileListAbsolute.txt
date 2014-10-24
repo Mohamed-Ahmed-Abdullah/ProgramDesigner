@@ -26,3 +26,17 @@ C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\Main
 C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.g.resources
 C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.Properties.Resources.resources
 C:\Users\mohamed\Documents\GitHub\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.csproj.GenerateResource.Cache
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.exe
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.pdb
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\bin\Debug\ProgramDesigner.exe
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\bin\Debug\ProgramDesigner.pdb
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.csprojResolveAssemblyReference.cache
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\MainWindow.g.cs
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\App.g.cs
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner_MarkupCompile.cache
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner_MarkupCompile.lref
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\MainWindow.baml
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.g.resources
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.Properties.Resources.resources
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.csproj.GenerateResource.Cache

@@ -57,8 +57,7 @@ namespace ProgramDesigner
 
         public static object LocalClipboard { get; set; }
         public Utils Utils { get; set; }
-        //when Clone implemented 
-        //each new ite should have the TranslateTransform and SelectionChanging
+
         public MainWindow()
         {
             InitializeComponent();
@@ -94,10 +93,19 @@ namespace ProgramDesigner
                     return;
 
                 _isControlsVisible = !_isControlsVisible;
-                ControlList.ForEach(f =>
-                {
-                    f.Visibility = _isControlsVisible ? Visibility.Visible : Visibility.Collapsed;
-                });
+
+                var x = Canvas.GetLeft(VerticalBarrier);
+
+                MainCanvas.Children.OfType<DragGrip>()
+                    .Where( w =>
+                            ((TranslateTransform) w.RenderTransform).X <= x &&
+                            ((Border) w.Child).Background == Brushes.Orange)
+                    .ToList()
+                    .ForEach(f =>
+                    {
+                        f.Visibility = _isControlsVisible ? Visibility.Visible : Visibility.Collapsed;
+                    });
+
                 NotifyPropertyChanged("");
             };
             Var.MouseDown += (a, b) =>
@@ -106,10 +114,19 @@ namespace ProgramDesigner
                     return;
 
                 _isVarVisible = !_isVarVisible;
-                VarList.ForEach(f =>
-                {
-                    f.Visibility = _isVarVisible ? Visibility.Visible : Visibility.Collapsed;
-                });
+
+                var x = Canvas.GetLeft(VerticalBarrier);
+
+                MainCanvas.Children.OfType<DragGrip>()
+                    .Where(w =>
+                            ((TranslateTransform)w.RenderTransform).X <= x &&
+                            ((Border)w.Child).Background == Brushes.DeepSkyBlue)
+                    .ToList()
+                    .ForEach(f =>
+                    {
+                        f.Visibility = _isVarVisible ? Visibility.Visible : Visibility.Collapsed;
+                    });
+
                 NotifyPropertyChanged("");
             };
             Token.MouseDown += (a, b) =>
@@ -118,10 +135,19 @@ namespace ProgramDesigner
                     return;
 
                 _isTokenVisible = !_isTokenVisible;
-                TokenList.ForEach(f =>
-                {
-                    f.Visibility = _isTokenVisible ? Visibility.Visible : Visibility.Collapsed;
-                });
+
+                var x = Canvas.GetLeft(VerticalBarrier);
+
+                MainCanvas.Children.OfType<DragGrip>()
+                    .Where(w =>
+                            ((TranslateTransform)w.RenderTransform).X <= x &&
+                            ((Border)w.Child).Background == Brushes.DarkViolet)
+                    .ToList()
+                    .ForEach(f =>
+                    {
+                        f.Visibility = _isTokenVisible ? Visibility.Visible : Visibility.Collapsed;
+                    });
+
                 NotifyPropertyChanged("");
             };
             #endregion
@@ -133,13 +159,6 @@ namespace ProgramDesigner
             MainCanvas.Children.Add(item);
         }
 
-        //private ContextMenu GetNewContext()
-        //{
-        //    var contextMenue = new ContextMenu();
-        //    contextMenue.item
-        //    return contextMenue;
-        //}
-
         public DragGrip GetItem(string name ,string text,TranslateTransform translateTransform,
             double width,Brush backgound,Thickness margin,string contextMenuName)
         {
@@ -150,6 +169,7 @@ namespace ProgramDesigner
                 IsDragable = false,
                 IsToolBarItem = true,
                 IsSelected = false,
+                ContextMenuName = contextMenuName
             };
 
             var binding = new Binding
@@ -477,17 +497,6 @@ namespace ProgramDesigner
             }
         }
 
-        public string G()
-        {
-            var result = "";
-            foreach (var child in MainCanvas.Children.OfType<DragGrip>())
-            {
-                result += child.Name + ":" + ((TranslateTransform)child.RenderTransform).X + "," + ((TranslateTransform)child.RenderTransform).Y + @"
-";
-            }
-            return result;
-        }
-
         private void CanvasOnMouseUp(object sender, MouseButtonEventArgs e)
         {
             var draggable = e.OriginalSource as DragGrip;
@@ -526,7 +535,7 @@ namespace ProgramDesigner
                 PropertyChanged(this,new PropertyChangedEventArgs(propertyName));
         }
 
-        private void MenuItemOnDelete(object sender, RoutedEventArgs e)
+        public void MenuItemOnDelete(object sender, RoutedEventArgs e)
         {
             var selected = MainCanvas.Children.OfType<DragGrip>().Where(w => w.IsSelected).ToList();
             if (selected.Count >= 1)
@@ -535,26 +544,28 @@ namespace ProgramDesigner
             }
             else
             {
-                MainCanvas.Children.Remove(((ContextMenu) ((MenuItem) sender).CommandParameter).PlacementTarget);
+                MainCanvas.Children.Remove(((ContextMenu)((MenuItem)sender).Parent).PlacementTarget);
             }
         }
 
-        private void MenuItemOnRename(object sender, RoutedEventArgs e)
+        public void MenuItemOnRename(object sender, RoutedEventArgs e)
         {
-            RenameDragGrip = (DragGrip)((ContextMenu)((MenuItem)sender).CommandParameter).PlacementTarget;
-            TextBoxRename.Text = ((TextBlock) ((Border) RenameDragGrip.Child).Child).Text;
+            //RenameDragGrip = (DragGrip)((ContextMenu)((MenuItem)sender).CommandParameter).PlacementTarget;
+            RenameDragGrip = (DragGrip)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget;
+            TextBoxRename.Text = ((TextBlock) ((Border) RenameDragGrip.Child).Child).Text ;
             IsNameDialogVisible = true;
         }
 
         private void RenameOnClick(object sender, RoutedEventArgs e)
         {
             IsNameDialogVisible = false;
+            ((TextBlock) ((Border) RenameDragGrip.Child).Child).Text = TextBoxRename.Text;
             if (TextBoxRename.Text.Count() >= "variable".Count())
             {
-                ((TextBlock)((Border)RenameDragGrip.Child).Child).Text = TextBoxRename.Text;
-                ((Border) RenameDragGrip.Child).Width = MeasureString(TextBoxRename.Text).Width;
+                ((Border) RenameDragGrip.Child).Width = MeasureString(TextBoxRename.Text).Width*1.5;
             }
         }
+
         private Size MeasureString(string candidate)
         {
             var formattedText = new FormattedText(
@@ -566,6 +577,70 @@ namespace ProgramDesigner
                 Brushes.Black);
 
             return new Size(formattedText.Width, formattedText.Height);
+        }
+
+        private void TextBoxRenameOnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                RenameOnClick(null,null);
+            }
+
+            if (e.Key == Key.Escape)
+            {
+                IsNameDialogVisible = false;
+            }
+        }
+
+
+        private void SaveClick(object sender, RoutedEventArgs e)
+        {
+            var xx = Canvas.GetLeft(VerticalBarrier);
+
+            var Ys = MainCanvas.Children.OfType<DragGrip>()
+                .Where(w => ((TranslateTransform)w.RenderTransform).X > xx )
+                .Select(s => ((TranslateTransform) s.RenderTransform).Y)
+                .Distinct()
+                .OrderBy(o=>o)
+                .ToList();
+
+            var Xs = MainCanvas.Children.OfType<DragGrip>()
+                .Where(w => ((TranslateTransform)w.RenderTransform).X > xx)
+                .Select(s => ((TranslateTransform)s.RenderTransform).X)
+                .Distinct()
+                .OrderBy(o => o)
+                .ToList();
+
+            var temp = MainCanvas.Children.OfType<DragGrip>()
+                .Where(w => ((TranslateTransform)w.RenderTransform).X > xx)
+                .Select(o => new
+                {
+                    o,
+                    ((TranslateTransform) o.RenderTransform).X,
+                    ((TranslateTransform) o.RenderTransform).Y
+                })
+                .ToList();
+
+            var order = new List<DragGrip>();
+            foreach (var y in Ys)
+            {
+                foreach (var x in Xs)
+                {
+                    var first = temp.FirstOrDefault(f => f.Y == y && f.X == x);
+                    if (first != null)
+                    {
+                        order.Add(first.o);
+                    }
+                    else
+                    {
+                        Debug.Write("Some combination will not exsists and this is normal");
+                    }
+                }
+            }
+
+            var code = order.Select(s => ((TextBlock)((Border)s.Child).Child).Text).ToList().GetString();
+
+            Debug.Write("");
         }
     }
 
@@ -622,6 +697,13 @@ namespace ProgramDesigner
             var temp = x;
             x = y;
             y = temp;
+        }
+
+        public static string GetString(this List<string> list)
+        {
+            var str = "";
+            list.ForEach(f=> str+=f +" ");
+            return str;
         }
     }
 }

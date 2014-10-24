@@ -13,11 +13,11 @@
             <ContextMenu x:Key="ContextMenu2">
                 <MenuItem Header="Delete" Click="MenuItemOnDelete"
                           CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"></MenuItem>
-                
+
                 <MenuItem Header="Rename" Click="MenuItemOnRename"
                           CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"></MenuItem>
             </ContextMenu>
-            
+
             <converters:BoolToIntConverter x:Key="BoolToIntConverter"/>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:BoolToThicknessConverter x:Key="BoolToThicknessConverter"/>
@@ -28,38 +28,41 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5"
                     Visibility="{Binding IsNameDialogVisible,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
-            <TextBox Name="TextBoxRename" Width="300"></TextBox>
+            <TextBox Name="TextBoxRename" Width="300" KeyDown="TextBoxRenameOnKeyDown" ></TextBox>
             <Button Content="Ok" Click="RenameOnClick" Padding="20,0" Margin="10,0,0,0"></Button>
         </StackPanel>
         <Border BorderThickness="0" Grid.Row="1">
             <Canvas Name="MainCanvas" MouseDown="CanvasOnMouseDown" MouseMove="CanvasOnMouseMove" MouseUp="CanvasOnMouseUp" 
                     Background="White">
-                
+
+                <Button Content="Save" Padding="20,0" Canvas.Left="186" Canvas.Top="5"
+                        Click="SaveClick"></Button>
+
                 <Rectangle Name="SelectionRectangle" Width="250" Height="250" StrokeThickness="1"
                            Stroke="DeepSkyBlue" StrokeDashArray="7 7" Visibility="Collapsed" />
-                
-                <Rectangle Canvas.Left="180" 
+
+                <Rectangle Name="VerticalBarrier" Canvas.Left="180" 
                            Width="1" Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Canvas}},Path=ActualHeight}"
                            Stroke="OrangeRed" />
-                
+
                 <Rectangle Canvas.Top="70"
                            Width="180" Height="1"
                            Stroke="OrangeRed"></Rectangle>
 
                 <Border Name="Control" BorderBrush="Orange"
                         BorderThickness="{Binding IsControlsVisible,Converter={StaticResource BoolToThicknessConverter},UpdateSourceTrigger=PropertyChanged}" 
-                        CornerRadius="0" Canvas.Left="20" Canvas.Top="5">                    
+                        CornerRadius="0" Canvas.Left="20" Canvas.Top="5">
                     <TextBlock Foreground="Orange" Padding="10,0"
                                Text="Control"></TextBlock>
                 </Border>
-                
+
                 <Border Name="Var" BorderBrush="DeepSkyBlue" CornerRadius="0"
                         BorderThickness="{Binding IsVarVisible,Converter={StaticResource BoolToThicknessConverter},UpdateSourceTrigger=PropertyChanged}" 
                         Canvas.Left="110" Canvas.Top="5">
                     <TextBlock Foreground="DeepSkyBlue" Padding="10,0"
                                Text="Var"></TextBlock>
                 </Border>
-                
+
                 <Border Name="Token" BorderBrush="DarkViolet" CornerRadius="0"
                         BorderThickness="{Binding IsTokenVisible,Converter={StaticResource BoolToThicknessConverter},UpdateSourceTrigger=PropertyChanged}" 
                         Canvas.Left="20" Canvas.Top="35">
