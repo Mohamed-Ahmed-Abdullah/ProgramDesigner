@@ -40,3 +40,7 @@ C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug
 C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.g.resources
 C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.Properties.Resources.resources
 C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\obj\Debug\ProgramDesigner.csproj.GenerateResource.Cache
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\bin\Debug\ProgramDesigner.exe.config
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\bin\Debug\ExpressionCompiler.dll
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\bin\Debug\Irony.dll
+C:\Users\mohamed.abdullah\Source\Repos\ProgramDesigner\ProgramDesigner\bin\Debug\ExpressionCompiler.pdb

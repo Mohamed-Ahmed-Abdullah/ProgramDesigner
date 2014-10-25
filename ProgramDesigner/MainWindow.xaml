@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:ProgramDesigner.Controls"
         xmlns:converters="clr-namespace:ProgramDesigner.Converters"
-        Title="MainWindow" Height="397.368" Width="592.105">
+        Title="MainWindow" Height="543.368" Width="793.105">
     <Grid>
         <Grid.Resources>
             <ContextMenu x:Key="ContextMenu1">
@@ -25,6 +25,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5"
                     Visibility="{Binding IsNameDialogVisible,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
@@ -71,5 +72,16 @@
                 </Border>
             </Canvas>
         </Border>
+
+        <Grid  Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border BorderThickness="0,0,0,2" BorderBrush="DeepSkyBlue">
+                <TextBlock Text="Result:"></TextBlock>
+            </Border>
+            <TextBox Name="Result" Background="Black" Foreground="White" Grid.Row="1" Height="60" Margin="0,0,0,0"></TextBox>
+        </Grid>
     </Grid>
 </Window>

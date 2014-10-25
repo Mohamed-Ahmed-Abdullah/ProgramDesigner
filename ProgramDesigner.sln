@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgramDesigner", "ProgramDesigner\ProgramDesigner.csproj", "{09E60975-76FD-4237-A860-CFF7023BF25B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionCompiler", "ExpressionCompiler\ExpressionCompiler.csproj", "{44AF361E-0D26-4D95-9F1D-ADF3DFCCB7AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{09E60975-76FD-4237-A860-CFF7023BF25B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09E60975-76FD-4237-A860-CFF7023BF25B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09E60975-76FD-4237-A860-CFF7023BF25B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44AF361E-0D26-4D95-9F1D-ADF3DFCCB7AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44AF361E-0D26-4D95-9F1D-ADF3DFCCB7AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44AF361E-0D26-4D95-9F1D-ADF3DFCCB7AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44AF361E-0D26-4D95-9F1D-ADF3DFCCB7AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

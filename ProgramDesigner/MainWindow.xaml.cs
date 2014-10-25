@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using ExpressionCompiler;
 using ProgramDesigner.Controls;
 using ProgramDesigner.Converters;
 using System.Collections.Generic;
@@ -77,11 +78,13 @@ namespace ProgramDesigner
             AddInLists(TokenList, GetItem("OpenBlockBracket", "{", new TranslateTransform(50, 290), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
             AddInLists(TokenList, GetItem("CloseBlockBracket", "}", new TranslateTransform(50, 320), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
             AddInLists(TokenList, GetItem("Plus", "+", new TranslateTransform(50, 350), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
-            AddInLists(TokenList, GetItem("Minus", "-", new TranslateTransform(50, 380), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
-            AddInLists(TokenList, GetItem("Mult", "*", new TranslateTransform(50, 410), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
-            AddInLists(TokenList, GetItem("Div", "/", new TranslateTransform(50, 440), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
-            AddInLists(TokenList, GetItem("Equal", "=", new TranslateTransform(50, 470), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
-            AddInLists(TokenList, GetItem("Semi", ";", new TranslateTransform(50, 500), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("LessThan", ">", new TranslateTransform(50, 380), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("MoreThan", "<", new TranslateTransform(50, 410), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Minus", "-", new TranslateTransform(50, 440), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Mult", "*", new TranslateTransform(50, 470), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Div", "/", new TranslateTransform(50, 500), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Equal", "=", new TranslateTransform(50, 530), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
+            AddInLists(TokenList, GetItem("Semi", ";", new TranslateTransform(50, 560), 30, Brushes.DarkViolet, new Thickness(-4, -5, 0, 0), "ContextMenu1"));
 
             Utils = new Utils();
             DataContext = this;
@@ -639,8 +642,14 @@ namespace ProgramDesigner
             }
 
             var code = order.Select(s => ((TextBlock)((Border)s.Child).Child).Text).ToList().GetString();
-
-            Debug.Write("");
+            try
+            {
+                Result.Text = Compiler.Compile(code).ToString();
+            }
+            catch (Exception ex)
+            {
+                Result.Text = ex.Message;
+            }
         }
     }
 
